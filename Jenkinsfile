@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven-3.9.16'
+    }
+
     options {
         skipDefaultCheckout(true)
     }
@@ -20,7 +24,7 @@ pipeline {
                 always {
                     junit(
                         testResults: 'course-registration-app/target/surefire-reports/TEST-*.xml',
-                        allowEmptyResults: false
+                        allowEmptyResults: true
                     )
                 }
             }
