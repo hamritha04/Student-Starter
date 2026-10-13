@@ -88,6 +88,48 @@ minikube service nginx-service --url
 
 The deployment was verified with two ready Nginx replicas and a NodePort service on port `30080`.
 
+## Kubernetes Scaling and Self-Healing Evidence
+
+The Nginx application was deployed on the local Minikube cluster using the Deployment and NodePort Service manifests.
+
+### Scale the Deployment
+
+Command:
+
+```bash
+kubectl scale deployment nginx-deployment --replicas=3
+kubectl rollout status deployment/nginx-deployment
+kubectl get deployments
+kubectl get pods
+```
+
+Observed result:
+- Rollout completed successfully.
+- Deployment showed 3/3 ready replicas.
+- Three Nginx pods were running.
+
+### Demonstrate Self-Healing
+
+A running Nginx pod was deleted:
+
+```bash
+kubectl delete pod nginx-deployment-75cc477c85-cj5f6
+kubectl get deployments
+kubectl get pods
+```
+
+Observed result:
+- The selected pod was deleted successfully.
+- Kubernetes created a replacement pod named `nginx-deployment-75cc477c85-pd6s6`.
+- The Deployment returned to 3/3 ready replicas, with three running pods.
+
+### Explanation
+
+The Deployment controller continuously compares the actual number of replicas with the desired replica count. When a pod is deleted, it creates a replacement to restore the desired state.
+
+### Evidence
+
+Screenshots and command outputs were captured from the actual Minikube execution. They demonstrate successful scaling and pod self-healing.
 
 
 \## Branch
